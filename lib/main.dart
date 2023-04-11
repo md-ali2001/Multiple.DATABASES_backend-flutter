@@ -75,7 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () => psql(), child: Text("connect to psql")),
             ElevatedButton(
                 onPressed: () => mongodbatlas(),
-                child: Text("connect to mongodb atlas"))
+                child: Text("connect to mongodb atlas")),
+            ElevatedButton(
+                onPressed: () => mongocollection(),
+                child: Text("create collection mongodb"))
           ],
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
@@ -123,5 +126,12 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       {'name': 'Jorge Luis Borges', 'email': 'jorge@borges.com', 'age': 123}
     ]);
+  }
+
+  mongocollection() async {
+    var db = await mongo.Db.create(
+        "mongodb+srv://ali:ali@cluster0.we3ovhm.mongodb.net/flutter?retryWrites=true&w=majority");
+    await db.open();
+    db.createCollection("new collection");
   }
 }

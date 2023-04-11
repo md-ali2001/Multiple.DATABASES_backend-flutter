@@ -36,6 +36,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   sql_conn: ^0.0.3
+  postgresql2: ^1.0.4
+  postgres: ^2.6.1
+  mongo_dart: ^0.9.1
 
 dev_dependencies:
   flutter_test:

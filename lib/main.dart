@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sql_conn/sql_conn.dart';
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
+import 'package:postgres/postgres.dart';
 
 void main() {
   runApp(const MyApp());
@@ -7,6 +8,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+// ...
 
   // This widget is the root of your application.
   @override
@@ -49,19 +52,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -80,6 +70,13 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
+          children: [
+            ElevatedButton(
+                onPressed: () => psql(), child: Text("connect to psql")),
+            ElevatedButton(
+                onPressed: () => mongodbatlas(),
+                child: Text("connect to mongodb atlas"))
+          ],
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -94,23 +91,37 @@ class _MyHomePageState extends State<MyHomePage> {
           // center the children vertically; the main axis here is the vertical
           // axis because Columns are vertical (the cross axis would be
           // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  psql() async {
+    var connection = PostgreSQLConnection(" 10.0.2.2", 5432, "postgres",
+        username: 'postgres',
+        password: "ali",
+        useSSL: true,
+        isUnixSocket: false);
+    //await connection.open()
+    await connection.open().then((value) {
+      print("Database Connected!");
+    });
+  }
+
+  mongodbatlas() async {
+    var db = await mongo.Db.create(
+        "mongodb+srv://ali:ali@cluster0.we3ovhm.mongodb.net/flutter?retryWrites=true&w=majority");
+    await db.open();
+    var ucollection = db.collection("fluttercollection");
+    await ucollection.insertMany([
+      {
+        'name': 'William Shakespeare',
+        'email': 'william@shakespeare.com',
+        'age': 587
+      },
+      {'name': 'Jorge Luis Borges', 'email': 'jorge@borges.com', 'age': 123}
+    ]);
   }
 }

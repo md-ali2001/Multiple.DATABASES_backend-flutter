@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mongo_dart/mongo_dart.dart' as mongo;
-import 'package:postgres/postgres.dart';
 
 import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'back4app keys.dart';
 
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  final keyApplicationId = 'aNRmgfCuf4V8uzRCLWLij3UjP9rKuzRh2cdUd549';
-  final keyClientKey = 'Ufu17BBaSMCoqPfNHtq2dYEtTXnVFRYcUVWxsSfF';
+  final keyApplicationId = keyappid;
+  final keyClientKey = keyclientkey;
   final keyParseServerUrl = 'https://parseapi.back4app.com';
 
   await Parse().initialize(keyApplicationId, keyParseServerUrl,
@@ -85,14 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
         // in the middle of the parent.
         child: Column(
           children: [
-            ElevatedButton(
-                onPressed: () => psql(), child: Text("connect to psql")),
-            ElevatedButton(
-                onPressed: () => mongodbatlas(),
-                child: Text("connect to mongodb atlas")),
-            ElevatedButton(
-                onPressed: () => mongocollection(),
-                child: Text("create collection mongodb"))
+            // ElevatedButton(
+            //     onPressed: () => psql(), child: Text("connect to back4app"))
+
           ],
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
@@ -115,37 +109,9 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  psql() async {
-    var connection = PostgreSQLConnection(" 10.0.2.2", 5432, "postgres",
-        username: 'postgres',
-        password: "ali",
-        useSSL: true,
-        isUnixSocket: false);
-    //await connection.open()
-    await connection.open().then((value) {
-      print("Database Connected!");
-    });
-  }
 
-  mongodbatlas() async {
-    var db = await mongo.Db.create(
-        "mongodb+srv://ali:ali@cluster0.we3ovhm.mongodb.net/flutter?retryWrites=true&w=majority");
-    await db.open();
-    var ucollection = db.collection("fluttercollection");
-    await ucollection.insertMany([
-      {
-        'name': 'William Shakespeare',
-        'email': 'william@shakespeare.com',
-        'age': 587
-      },
-      {'name': 'Jorge Luis Borges', 'email': 'jorge@borges.com', 'age': 123}
-    ]);
-  }
 
-  mongocollection() async {
-    var db = await mongo.Db.create(
-        "mongodb+srv://ali:ali@cluster0.we3ovhm.mongodb.net/flutter?retryWrites=true&w=majority");
-    await db.open();
-    db.createCollection("new collection");
-  }
+
+
+
 }
